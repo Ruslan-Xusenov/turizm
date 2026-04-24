@@ -809,3 +809,17 @@ section {
         height: 200px;
     }
 }
+
+/* Modal Styles */
+.modal { display: none; position: fixed; z-index: 1001; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.8); }
+.modal-content { background-color: #fefefe; margin: 5% auto; padding: 20px; border: 1px solid #888; width: 80%; max-width: 800px; border-radius: 10px; position: relative; }
+.close-modal { position: absolute; right: 15px; top: 10px; color: #aaa; font-size: 28px; font-weight: bold; cursor: pointer; z-index: 10; }
+.close-modal:hover, .close-modal:focus { color: black; text-decoration: none; cursor: pointer; }
+/* Carousel Styles */
+.carousel-container { position: relative; width: 100%; height: 400px; overflow: hidden; border-radius: 8px; margin-bottom: 20px; }
+.carousel-slide { display: none; width: 100%; height: 100%; object-fit: cover; }
+.carousel-slide.active { display: block; }
+.carousel-prev, .carousel-next { cursor: pointer; position: absolute; top: 50%; width: auto; padding: 16px; margin-top: -22px; color: white; font-weight: bold; font-size: 18px; transition: 0.6s ease; border-radius: 0 3px 3px 0; user-select: none; background-color: rgba(0,0,0,0.5); }
+.carousel-next { right: 0; border-radius: 3px 0 0 3px; }
+.carousel-prev:hover, .carousel-next:hover { background-color: rgba(0,0,0,0.8); }
+.modal-price { font-size: 1.5rem; color: var(--primary-color); font-weight: bold; margin: 15px 0; padding: 10px; background: var(--bg-light); border-radius: 8px; display: inline-block;}

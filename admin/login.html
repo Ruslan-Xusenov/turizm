@@ -10,7 +10,7 @@
 </head>
 <body class="login-page">
     <div class="login-container">
-        <div class="login-box">
+        <div class="login-box" id="login-box">
             <div class="login-header">
                 <i class="fas fa-lock"></i>
                 <h2>Admin Panel</h2>
@@ -29,28 +29,99 @@
                     <i class="fas fa-sign-in-alt"></i> Kirish
                 </button>
             </form>
-            <p class="demo-credentials">
-                Demo: login - <strong>admin</strong>, parol - <strong>admin</strong>
-            </p>
-            <a href="../index.html" class="back-link">
+            <p id="error-msg" style="color:red; text-align:center; margin-top:10px; display:none;"></p>
+            <a href="/" class="back-link">
                 <i class="fas fa-arrow-left"></i> Bosh sahifaga qaytish
             </a>
+        </div>
+
+        <div class="login-box" id="change-creds-box" style="display:none;">
+            <div class="login-header">
+                <i class="fas fa-user-shield"></i>
+                <h2>Xavfsizlik</h2>
+                <p>Xavfsizlik uchun yangi login va parol kiriting</p>
+            </div>
+            <form id="change-creds-form">
+                <div class="form-group">
+                    <label>Yangi Login</label>
+                    <input type="text" id="new_username" required>
+                </div>
+                <div class="form-group">
+                    <label>Yangi Parol</label>
+                    <input type="password" id="new_password" required>
+                </div>
+                <button type="submit" class="btn-login">Saqlash</button>
+            </form>
+            <p id="creds-error-msg" style="color:red; text-align:center; margin-top:10px; display:none;"></p>
         </div>
     </div>
 
     <script>
-        document.getElementById('login-form').addEventListener('submit', function(e) {
+        let currentUsername = '';
+        let currentPassword = '';
+
+        document.getElementById('login-form').addEventListener('submit', async function(e) {
             e.preventDefault();
-            
             const username = document.getElementById('username').value;
             const password = document.getElementById('password').value;
+            const errorMsg = document.getElementById('error-msg');
             
-            // Simple authentication (in production, use proper backend authentication)
-            if (username === 'admin' && password === 'admin') {
-                localStorage.setItem('adminLoggedIn', 'true');
-                window.location.href = 'dashboard.html';
-            } else {
-                alert('Login yoki parol noto\'g\'ri!');
+            try {
+                const res = await fetch('/api/admin/login', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({username, password})
+                });
+                
+                if (res.ok) {
+                    const data = await res.json();
+                    if (data.status === 'requires_password_change') {
+                        currentUsername = username;
+                        currentPassword = password;
+                        document.getElementById('login-box').style.display = 'none';
+                        document.getElementById('change-creds-box').style.display = 'block';
+                    } else if (data.status === 'success') {
+                        localStorage.setItem('adminToken', data.token);
+                        window.location.href = '/admin/dashboard';
+                    }
+                } else {
+                    errorMsg.innerText = 'Login yoki parol noto\'g\'ri!';
+                    errorMsg.style.display = 'block';
+                }
+            } catch (err) {
+                errorMsg.innerText = 'Xatolik yuz berdi';
+                errorMsg.style.display = 'block';
+            }
+        });
+
+        document.getElementById('change-creds-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const new_username = document.getElementById('new_username').value;
+            const new_password = document.getElementById('new_password').value;
+            const errorMsg = document.getElementById('creds-error-msg');
+            
+            try {
+                const res = await fetch('/api/admin/change-credentials', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        username: currentUsername,
+                        old_password: currentPassword,
+                        new_username,
+                        new_password
+                    })
+                });
+                
+                if (res.ok) {
+                    alert('Muvaffaqiyatli saqlandi! Iltimos, yangi ma\'lumotlar bilan qayta kiring.');
+                    window.location.reload();
+                } else {
+                    errorMsg.innerText = 'Xatolik yuz berdi!';
+                    errorMsg.style.display = 'block';
+                }
+            } catch (err) {
+                errorMsg.innerText = 'Xatolik yuz berdi';
+                errorMsg.style.display = 'block';
             }
         });
     </script>

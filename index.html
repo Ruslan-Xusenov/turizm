@@ -3,10 +3,51 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>O'zbekiston Turizmi - Bosh sahifa</title>
+    <title>O'zbekiston Turizmi - Eng Zo'r Sayohat Paketlari</title>
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="O'zbekistonning eng go'zal joylari, tarixiy shaharlari va arzon turistik paketlari. Samarqand, Buxoro, Xiva kabi shaharlarga qiziqarli sayohatlar.">
+    <meta name="keywords" content="O'zbekiston turizmi, sayohat, tur paketlar, Samarqand, Buxoro, Xiva, sayohat narxlari, turizm agentligi">
+    <meta name="author" content="UzTourism">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://uztourism.uz/">
+    
+    <!-- Open Graph (Facebook, Telegram) -->
+    <meta property="og:title" content="UzTourism - O'zbekiston bo'ylab sayohatlar">
+    <meta property="og:description" content="Eng hamyonbop va qiziqarli sayohat paketlari bizda. O'zbekistonning go'zalligini biz bilan kashf eting.">
+    <meta property="og:image" content="https://images.unsplash.com/photo-1564507592333-c60657eea523?w=1200">
+    <meta property="og:url" content="https://uztourism.uz/">
+    <meta property="og:type" content="website">
+    
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="UzTourism - O'zbekiston bo'ylab sayohatlar">
+    <meta name="twitter:description" content="Eng hamyonbop va qiziqarli sayohat paketlari bizda.">
+    <meta name="twitter:image" content="https://images.unsplash.com/photo-1564507592333-c60657eea523?w=1200">
+
     <link rel="stylesheet" href="css/style.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "TravelAgency",
+      "name": "UzTourism",
+      "url": "https://uztourism.uz/",
+      "logo": "https://uztourism.uz/images/logo.png",
+      "description": "O'zbekistonning eng go'zal joylarini butun dunyo bo'ylab odamlarga tanishtirishda yetakchi kompaniya.",
+      "telephone": "+998 90 123 45 67",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "Chilonzor tumani",
+        "addressLocality": "Toshkent",
+        "addressCountry": "UZ"
+      },
+      "priceRange": "$$"
+    }
+    </script>
 </head>
 <body>
     <!-- Header -->
@@ -22,6 +63,9 @@
                 <li><a href="#destinations">Diqqatga sazovor joylar</a></li>
                 <li><a href="#places">Turistik joylar</a></li>
                 <li><a href="#contact">Aloqa</a></li>
+                <li id="auth-container">
+                    <a href="/auth/google/login" class="btn-primary auth-btn" style="padding: 8px 15px; margin-left: 10px;"><i class="fab fa-google"></i> Kirish</a>
+                </li>
             </ul>
             <div class="hamburger">
                 <span></span>
@@ -34,14 +78,14 @@
     <!-- Hero Section -->
     <section id="home" class="hero">
         <div class="hero-content">
-            <h1>O'zbekistonning go'zalligini kashf eting</h1>
-            <p>Tarixiy shaharlar, betakror tabiat va mehmondo'st odamlar sizni kutmoqda</p>
+            <h1 id="hero-title">O'zbekistonning go'zalligini kashf eting</h1>
+            <p id="hero-subtitle">Tarixiy shaharlar, betakror tabiat va mehmondo'st odamlar sizni kutmoqda</p>
             <a href="#destinations" class="btn-primary">Sayohatni boshlash</a>
         </div>
         <div class="hero-slider">
-            <div class="slide active" style="background-image: url('https://images.unsplash.com/photo-1564507592333-c60657eea523?w=1920')"></div>
-            <div class="slide" style="background-image: url('https://images.unsplash.com/photo-1548013146-72479768bada?w=1920')"></div>
-            <div class="slide" style="background-image: url('https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=1920')"></div>
+            <div id="hero-img1" class="slide active" style="background-image: url('https://images.unsplash.com/photo-1564507592333-c60657eea523?w=1920')"></div>
+            <div id="hero-img2" class="slide" style="background-image: url('https://images.unsplash.com/photo-1548013146-72479768bada?w=1920')"></div>
+            <div id="hero-img3" class="slide" style="background-image: url('https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=1920')"></div>
         </div>
     </section>
 
@@ -75,8 +119,8 @@
     <section id="about" class="about">
         <div class="container">
             <div class="section-header">
-                <h2>Biz haqimizda</h2>
-                <p>O'zbekiston turizmi bilan tanishtirishda yetakchi kompaniya</p>
+                <h2 id="about-title">Biz haqimizda</h2>
+                <p id="about-subtitle">O'zbekiston turizmi bilan tanishtirishda yetakchi kompaniya</p>
             </div>
             <div class="about-content">
                 <div class="about-image">
@@ -84,7 +128,7 @@
                 </div>
                 <div class="about-text">
                     <h3>Nega aynan biz?</h3>
-                    <p>Biz O'zbekistonning eng go'zal joylarini butun dunyo bo'ylab odamlarga tanishtirishda 15 yildan ortiq tajribaga egamiz. Professional gidlarimiz, qulay transport xizmatlarimiz va maxsus tur paketlarimiz bilan sizga unutilmas sayohat tajribasini taqdim etamiz.</p>
+                    <p id="about-text">Biz O'zbekistonning eng go'zal joylarini butun dunyo bo'ylab odamlarga tanishtirishda 15 yildan ortiq tajribaga egamiz. Professional gidlarimiz, qulay transport xizmatlarimiz va maxsus tur paketlarimiz bilan sizga unutilmas sayohat tajribasini taqdim etamiz.</p>
                     <ul class="features">
                         <li><i class="fas fa-check"></i> Professional gidlar</li>
                         <li><i class="fas fa-check"></i> Qulay transport</li>
@@ -100,53 +144,53 @@
     <section id="destinations" class="destinations">
         <div class="container">
             <div class="section-header">
-                <h2>Diqqatga sazovor joylar</h2>
-                <p>O'zbekistonning eng mashhur turistik shaharlarini kashf eting</p>
+                <h2 id="destinations-title">Mashhur Yo'nalishlar</h2>
+                <p id="destinations-subtitle">O'zbekistonning eng mashhur turistik shaharlarini kashf eting</p>
             </div>
             <div class="destinations-grid">
                 <div class="destination-card">
                     <div class="card-image">
-                        <img src="https://images.unsplash.com/photo-1564507592333-c60657eea523?w=600" alt="Samarqand">
+                        <img id="dest1-img" src="https://images.unsplash.com/photo-1564507592333-c60657eea523?w=600" alt="Samarqand">
                         <div class="card-badge">Eng mashhur</div>
                     </div>
                     <div class="card-content">
-                        <h3>Samarqand</h3>
+                        <h3 id="dest1-name">Samarqand</h3>
                         <p><i class="fas fa-map-marker-alt"></i> O'zbekiston</p>
-                        <p class="description">Registon maydoni, Go'ri Amiq va boshqa tarixiy obidalari bilan mashhur.</p>
-                        <a href="#" class="btn-secondary">Batafsil</a>
+                        <p class="description" id="dest1-desc">Registon maydoni, Go'ri Amiq va boshqa tarixiy obidalari bilan mashhur.</p>
+                        <button onclick="openDestinationModal(1)" class="btn-secondary" style="border:none; cursor:pointer; width:100%;">Batafsil</button>
                     </div>
                 </div>
                 <div class="destination-card">
                     <div class="card-image">
-                        <img src="https://images.unsplash.com/photo-1548013146-72479768bada?w=600" alt="Buxoro">
+                        <img id="dest2-img" src="https://images.unsplash.com/photo-1548013146-72479768bada?w=600" alt="Buxoro">
                     </div>
                     <div class="card-content">
-                        <h3>Buxoro</h3>
+                        <h3 id="dest2-name">Buxoro</h3>
                         <p><i class="fas fa-map-marker-alt"></i> O'zbekiston</p>
-                        <p class="description">Islom sivilizatsiyasining markazi, 2500 yillik tarixga ega.</p>
-                        <a href="#" class="btn-secondary">Batafsil</a>
+                        <p class="description" id="dest2-desc">Islom sivilizatsiyasining markazi, 2500 yillik tarixga ega.</p>
+                        <button onclick="openDestinationModal(2)" class="btn-secondary" style="border:none; cursor:pointer; width:100%;">Batafsil</button>
                     </div>
                 </div>
                 <div class="destination-card">
                     <div class="card-image">
-                        <img src="https://images.unsplash.com/photo-1599576935803-91efed66198f?w=600" alt="Xiva">
+                        <img id="dest3-img" src="https://images.unsplash.com/photo-1599576935803-91efed66198f?w=600" alt="Xiva">
                     </div>
                     <div class="card-content">
-                        <h3>Xiva</h3>
+                        <h3 id="dest3-name">Xiva</h3>
                         <p><i class="fas fa-map-marker-alt"></i> O'zbekiston</p>
-                        <p class="description">Ichan-Qal'a - UNESCO tomonidan tan olingan dunyoviy meros.</p>
-                        <a href="#" class="btn-secondary">Batafsil</a>
+                        <p class="description" id="dest3-desc">Ichan-Qal'a - UNESCO tomonidan tan olingan dunyoviy meros.</p>
+                        <button onclick="openDestinationModal(3)" class="btn-secondary" style="border:none; cursor:pointer; width:100%;">Batafsil</button>
                     </div>
                 </div>
                 <div class="destination-card">
                     <div class="card-image">
-                        <img src="https://images.unsplash.com/photo-1605548230624-8d2d639e7022?w=600" alt="Toshkent">
+                        <img id="dest4-img" src="https://images.unsplash.com/photo-1605548230624-8d2d639e7022?w=600" alt="Toshkent">
                     </div>
                     <div class="card-content">
-                        <h3>Toshkent</h3>
+                        <h3 id="dest4-name">Toshkent</h3>
                         <p><i class="fas fa-map-marker-alt"></i> O'zbekiston</p>
-                        <p class="description">Zamonaviy arxitektura va an'anaviy madaniyat uyg'unligi.</p>
-                        <a href="#" class="btn-secondary">Batafsil</a>
+                        <p class="description" id="dest4-desc">Zamonaviy arxitektura va an'anaviy madaniyat uyg'unligi.</p>
+                        <button onclick="openDestinationModal(4)" class="btn-secondary" style="border:none; cursor:pointer; width:100%;">Batafsil</button>
                     </div>
                 </div>
             </div>
@@ -179,21 +223,21 @@
                         <i class="fas fa-map-marker-alt"></i>
                         <div>
                             <h4>Manzil</h4>
-                            <p>Toshkent shahri, Chilonzor tumani</p>
+                            <p id="contact-address">Toshkent shahri, Chilonzor tumani</p>
                         </div>
                     </div>
                     <div class="info-item">
                         <i class="fas fa-phone"></i>
                         <div>
                             <h4>Telefon</h4>
-                            <p>+998 90 123 45 67</p>
+                            <p id="contact-phone">+998 90 123 45 67</p>
                         </div>
                     </div>
                     <div class="info-item">
                         <i class="fas fa-envelope"></i>
                         <div>
                             <h4>Email</h4>
-                            <p>info@uztourism.uz</p>
+                            <p id="contact-email">info@uztourism.uz</p>
                         </div>
                     </div>
                 </div>
@@ -245,10 +289,20 @@
             </div>
             <div class="footer-bottom">
                 <p>&copy; 2024 UzTourism. Barcha huquqlar himoyalangan.</p>
-                <a href="admin/login.html" class="admin-link"><i class="fas fa-lock"></i> Admin panel</a>
+                <a href="/admin/login" class="admin-link"><i class="fas fa-lock"></i> Admin panel</a>
             </div>
         </div>
     </footer>
+
+    <!-- Place Details Modal -->
+    <div id="place-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <div id="modal-body">
+                <!-- Dynamic content here -->
+            </div>
+        </div>
+    </div>
 
     <script src="js/main.js"></script>
 </body>

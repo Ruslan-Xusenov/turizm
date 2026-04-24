@@ -5,6 +5,76 @@ const navLinks = document.querySelector('.nav-links');
 const navLinksItems = document.querySelectorAll('.nav-links a');
 const slides = document.querySelectorAll('.slide');
 const contactForm = document.getElementById('contact-form');
+const authContainer = document.getElementById('auth-container');
+const modal = document.getElementById('place-modal');
+const closeModal = document.querySelector('.close-modal');
+const modalBody = document.getElementById('modal-body');
+
+// Load Site Content
+async function loadSiteContent() {
+    try {
+        const res = await fetch('/api/content');
+        if (res.ok) {
+            const content = await res.json();
+            const keys = ['hero_title', 'hero_subtitle', 'about_title', 'about_subtitle', 'about_text', 'contact_address', 'contact_phone', 'contact_email', 'destinations_title', 'destinations_subtitle'];
+            
+            keys.forEach(key => {
+                const el = document.getElementById(key.replace('_', '-'));
+                if (el && content[key]) {
+                    el.innerText = content[key];
+                }
+            });
+
+            for(let i=1; i<=4; i++) {
+                const nameEl = document.getElementById(`dest${i}-name`);
+                const descEl = document.getElementById(`dest${i}-desc`);
+                const imgEl = document.getElementById(`dest${i}-img`);
+                if(nameEl && content[`dest${i}_name`]) nameEl.innerText = content[`dest${i}_name`];
+                if(descEl && content[`dest${i}_desc`]) descEl.innerText = content[`dest${i}_desc`];
+                if(imgEl && content[`dest${i}_img`]) imgEl.src = content[`dest${i}_img`];
+            }
+
+            for(let i=1; i<=3; i++) {
+                const heroImgEl = document.getElementById(`hero-img${i}`);
+                if(heroImgEl && content[`hero_img${i}`]) {
+                    heroImgEl.style.backgroundImage = `url('${content[`hero_img${i}`]}')`;
+                }
+            }
+        }
+    } catch (err) {
+        console.error("Failed to load site content:", err);
+    }
+}
+loadSiteContent();
+
+// Check User Login Status
+async function checkAuth() {
+    try {
+        const res = await fetch('/api/user');
+        if (res.ok) {
+            const data = await res.json();
+            authContainer.innerHTML = `
+                <div style="color: white; font-weight: bold; margin-left: 20px; display: flex; align-items: center; gap: 10px;">
+                    <i class="fas fa-user-circle"></i> ${data.name || 'Foydalanuvchi'}
+                    <a href="/auth/google/logout" class="btn-secondary" style="color:white; border-color:white; padding: 5px 10px; font-size: 0.8rem; margin-left: 10px;">Chiqish</a>
+                </div>
+            `;
+            
+            const nameInput = document.getElementById('name');
+            const emailInput = document.getElementById('email');
+            if(nameInput && data.name) nameInput.value = data.name;
+            if(emailInput && data.email) {
+                emailInput.value = data.email;
+                emailInput.setAttribute('readonly', 'readonly');
+                emailInput.style.backgroundColor = '#f0f0f0';
+                emailInput.style.cursor = 'not-allowed';
+            }
+        }
+    } catch (err) {
+        console.error("Auth check failed:", err);
+    }
+}
+checkAuth();
 
 // Header scroll effect
 window.addEventListener('scroll', () => {
@@ -20,7 +90,6 @@ hamburger.addEventListener('click', () => {
     navLinks.classList.toggle('active');
 });
 
-// Close mobile menu on link click
 navLinksItems.forEach(link => {
     link.addEventListener('click', () => {
         navLinks.classList.remove('active');
@@ -29,121 +98,38 @@ navLinksItems.forEach(link => {
 
 // Hero slider
 let currentSlide = 0;
-
 function nextSlide() {
     slides[currentSlide].classList.remove('active');
     currentSlide = (currentSlide + 1) % slides.length;
     slides[currentSlide].classList.add('active');
 }
-
 setInterval(nextSlide, 5000);
 
-// Active navigation link on scroll
-const sections = document.querySelectorAll('section[id]');
-
-window.addEventListener('scroll', () => {
-    let current = '';
-    
-    sections.forEach(section => {
-        const sectionTop = section.offsetTop;
-        const sectionHeight = section.clientHeight;
-        
-        if (scrollY >= sectionTop - 200) {
-            current = section.getAttribute('id');
-        }
-    });
-    
-    navLinksItems.forEach(link => {
-        link.classList.remove('active');
-        if (link.getAttribute('href') === `#${current}`) {
-            link.classList.add('active');
-        }
-    });
-});
-
-// Load places from localStorage
-function loadPlaces() {
-    const placesContainer = document.getElementById('places-container');
-    const places = JSON.parse(localStorage.getItem('places')) || [];
-    
-    if (places.length === 0) {
-        // Show default places if no places in localStorage
-        const defaultPlaces = [
-            {
-                id: 1,
-                name: 'Registon maydoni',
-                location: 'Samarqand',
-                description: 'Samarqandning eng mashhur diqqatga sazovor joyi. Uch madrasa - Ulug\'bek, Sherdor va Tillakori madrasalaridan iborat. XV asrda qurilgan bu majmua dunyoviy me\'morlikning eng yaxshi namunalaridan biri hisoblanadi.',
-                image: 'https://images.unsplash.com/photo-1564507592333-c60657eea523?w=600',
-                highlights: ['XV asr me\'morligi', 'Uch madrasa majmuasi', 'Kunduz va tun ko\'rinishi'],
-                category: 'Arxitektura'
-            },
-            {
-                id: 2,
-                name: 'Go\'ri Amiq',
-                location: 'Samarqand',
-                description: 'Amir Temurning maqbarasi. Zardushtiylar dinining ta\'siri ostida qurilgan bu inshoot katta sharqiy xazinalar va yuqori sifatli naqshlar bilan mashhur.',
-                image: 'https://images.unsplash.com/photo-1583417319070-4a69db38a482?w=600',
-                highlights: ['Amir Temur maqbarasi', 'Zumrad mozaikalar', 'Tarixiy muzey'],
-                category: 'Tarixiy obida'
-            },
-            {
-                id: 3,
-                name: 'Ichan-Qal\'a',
-                location: 'Xiva',
-                description: 'UNESCO tomonidan dunyoviy meros sifatida tan olingan Xivaning ichki shaharchasi. 2500 yillik tarixga ega bo\'lgan bu joyda 50 dan ortiq tarixiy obidalar saqlanib qolgan.',
-                image: 'https://images.unsplash.com/photo-1599576935803-91efed66198f?w=600',
-                highlights: ['UNESCO merosi', '2500 yillik tarix', '50+ tarixiy obida'],
-                category: 'Qadimiy shahar'
-            },
-            {
-                id: 4,
-                name: 'Lyabi-Hovuz',
-                location: 'Buxoro',
-                description: 'Buxoroning markaziy maydoni va eng mashhur diqqatga sazovor joyi. XVII asrda qurilgan hovuz atrofida Nodir Devonbegi madrasasi, Xonako va Mag\'oki-Attori masjidi joylashgan.',
-                image: 'https://images.unsplash.com/photo-1548013146-72479768bada?w=600',
-                highlights: ['Markaziy hovuz', 'Madrasa va xonako', 'Kechki yoritish'],
-                category: 'Majmua'
-            },
-            {
-                id: 5,
-                name: 'Chorvoq',
-                location: 'Toshkent viloyati',
-                description: 'Chatqol tog\'lari etaklarida joylashgan sun\'iy ko\'l va dam olish zonasi. Tabiiy go\'zallik va toza havo qidiruvchilar uchun ideal joy.',
-                image: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600',
-                highlights: ['Tog\' ko\'li', 'Dam olish zonalari', 'Sport turlari'],
-                category: 'Tabiat'
-            },
-            {
-                id: 6,
-                name: 'Shahrisabz',
-                location: 'Qashqadaryo',
-                description: 'Amir Temurning vatani va dunyoviy meros ro\'yxatiga kiritilgan shahar. Ak-Saroy saroyi, Dor-ut Tilovat va Dor-us Saodat majmualari bilan mashhur.',
-                image: 'https://images.unsplash.com/photo-1563284223-6233e93d7dc2?w=600',
-                highlights: ['Ak-Saroy saroyi', 'Amir Temur vatani', 'UNESCO merosi'],
-                category: 'Tarixiy shahar'
-            }
-        ];
-        
-        localStorage.setItem('places', JSON.stringify(defaultPlaces));
-        displayPlaces(defaultPlaces);
-    } else {
+// Load places from API
+async function loadPlaces() {
+    try {
+        const res = await fetch('/api/places');
+        if (!res.ok) throw new Error("Failed to fetch places");
+        const places = await res.json();
         displayPlaces(places);
+    } catch (err) {
+        console.error(err);
+        document.getElementById('places-container').innerHTML = '<p class="no-places">Joylar yuklanmadi. Server ishlayotganiga ishonch hosil qiling.</p>';
     }
 }
 
 function displayPlaces(places) {
     const placesContainer = document.getElementById('places-container');
     
-    if (places.length === 0) {
+    if (!places || places.length === 0) {
         placesContainer.innerHTML = '<p class="no-places">Hozircha turistik joylar yo\'q</p>';
         return;
     }
     
     placesContainer.innerHTML = places.map(item => `
-        <div class="place-card">
+        <div class="place-card" style="cursor: pointer;" onclick="openPlaceDetails(${item.id})">
             <div class="place-image">
-                <img src="${item.image}" alt="${item.name}" onerror="this.src='https://via.placeholder.com/600x400?text=Place'">
+                <img src="${item.images && item.images.length > 0 ? item.images[0] : 'https://via.placeholder.com/600x400?text=Joy'}" alt="${item.name}">
                 <span class="place-badge">${item.category}</span>
             </div>
             <div class="place-content">
@@ -152,31 +138,116 @@ function displayPlaces(places) {
                     <span>${item.location}</span>
                 </div>
                 <h3>${item.name}</h3>
-                <p class="description">${item.description}</p>
-                <div class="place-details">
-                    <h4>Diqqatga sazovor:</h4>
-                    <ul>
-                        ${item.highlights.map(h => `<li><i class="fas fa-star"></i> ${h}</li>`).join('')}
-                    </ul>
-                </div>
+                <p class="description">${item.description.substring(0, 100)}...</p>
+                <div style="margin-top: 10px; font-weight: bold; color: var(--primary-color);">Batafsil ma'lumot va narxlar <i class="fas fa-arrow-right"></i></div>
             </div>
         </div>
     `).join('');
 }
 
-// Contact form submission
-contactForm.addEventListener('submit', (e) => {
-    e.preventDefault();
+// Open Place Details Modal
+async function openPlaceDetails(id) {
+    try {
+        const res = await fetch(`/api/places/${id}`);
+        if (!res.ok) throw new Error("Failed to fetch details");
+        const place = await res.json();
+        
+        let imagesHtml = '';
+        if (place.images && place.images.length > 0) {
+            imagesHtml = `
+                <div class="carousel-container">
+                    ${place.images.map((img, idx) => `<img class="carousel-slide ${idx===0?'active':''}" src="${img}" alt="${place.name}">`).join('')}
+                    ${place.images.length > 1 ? `
+                        <a class="carousel-prev" onclick="moveSlide(-1)">&#10094;</a>
+                        <a class="carousel-next" onclick="moveSlide(1)">&#10095;</a>
+                    ` : ''}
+                </div>
+            `;
+        }
+        
+        modalBody.innerHTML = `
+            <h2 style="margin-bottom: 10px;">${place.name}</h2>
+            <div style="color: #666; margin-bottom: 15px;"><i class="fas fa-map-marker-alt"></i> ${place.location} &bull; ${place.category}</div>
+            ${imagesHtml}
+            <p style="font-size: 1.1rem; line-height: 1.6; margin-bottom: 20px;">${place.description}</p>
+            <div class="modal-price">Sayohat narxi: ${place.price.toLocaleString()} so'm</div>
+        `;
+        
+        modal.style.display = "block";
+        window.currentCarouselIndex = 0;
+    } catch (err) {
+        console.error(err);
+        alert("Ma'lumotlarni yuklashda xatolik yuz berdi.");
+    }
+}
+
+// Open Destination Details Modal
+window.openDestinationModal = function(destId) {
+    const name = document.getElementById(`dest${destId}-name`).innerText;
+    const desc = document.getElementById(`dest${destId}-desc`).innerText;
+    const img = document.getElementById(`dest${destId}-img`).src;
     
+    modalBody.innerHTML = `
+        <h2 style="margin-bottom: 10px;">${name}</h2>
+        <div style="color: #666; margin-bottom: 15px;"><i class="fas fa-map-marker-alt"></i> O'zbekiston &bull; Mashhur Yo'nalish</div>
+        <div class="carousel-container">
+            <img class="carousel-slide active" src="${img}" alt="${name}">
+        </div>
+        <p style="font-size: 1.1rem; line-height: 1.6; margin-bottom: 20px;">${desc}</p>
+        <div style="margin-top: 20px; text-align:center;">
+            <a href="#places" onclick="closeModal.onclick()" class="btn-primary" style="display:inline-block; padding:10px 20px; border-radius:5px; color:#fff; text-decoration:none;">Sayohat paketlarini ko'rish</a>
+        </div>
+    `;
+    
+    modal.style.display = "block";
+}
+
+window.moveSlide = function(step) {
+    const slides = document.querySelectorAll('.carousel-slide');
+    if(slides.length === 0) return;
+    slides[window.currentCarouselIndex].classList.remove('active');
+    window.currentCarouselIndex = (window.currentCarouselIndex + step + slides.length) % slides.length;
+    slides[window.currentCarouselIndex].classList.add('active');
+}
+
+closeModal.onclick = function() {
+    modal.style.display = "none";
+}
+window.onclick = function(event) {
+    if (event.target == modal) {
+        modal.style.display = "none";
+    }
+}
+
+// Contact form submission
+contactForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
     const name = document.getElementById('name').value;
     const email = document.getElementById('email').value;
     const message = document.getElementById('message').value;
     
-    // In a real application, you would send this data to a server
-    // For now, we'll just show a success message
-    alert(`Rahmat ${name}! Xabaringiz qabul qilindi. Tez orada siz bilan bog'lanamiz.`);
-    
-    contactForm.reset();
+    try {
+        const res = await fetch('/api/contact', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({ name, email, message })
+        });
+        
+        if (res.ok) {
+            alert(`Rahmat ${name}! Xabaringiz qabul qilindi. Tez orada siz bilan bog'lanamiz.`);
+            const emailInput = document.getElementById('email');
+            if (emailInput.hasAttribute('readonly')) {
+                document.getElementById('message').value = '';
+            } else {
+                contactForm.reset();
+            }
+        } else {
+            alert("Xatolik yuz berdi. Iltimos qayta urinib ko'ring.");
+        }
+    } catch (err) {
+        console.error("Submit error:", err);
+        alert("Xatolik yuz berdi. Iltimos qayta urinib ko'ring.");
+    }
 });
 
 // Initialize
