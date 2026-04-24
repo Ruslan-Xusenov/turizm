@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - Kirish</title>
+    <link rel="stylesheet" href="../css/admin.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="login-page">
+    <div class="login-container">
+        <div class="login-box">
+            <div class="login-header">
+                <i class="fas fa-lock"></i>
+                <h2>Admin Panel</h2>
+                <p>Tizimga kirish uchun ma'lumotlarni kiriting</p>
+            </div>
+            <form id="login-form">
+                <div class="form-group">
+                    <label><i class="fas fa-user"></i> Login</label>
+                    <input type="text" id="username" placeholder="Login kiriting" required>
+                </div>
+                <div class="form-group">
+                    <label><i class="fas fa-key"></i> Parol</label>
+                    <input type="password" id="password" placeholder="Parol kiriting" required>
+                </div>
+                <button type="submit" class="btn-login">
+                    <i class="fas fa-sign-in-alt"></i> Kirish
+                </button>
+            </form>
+            <p class="demo-credentials">
+                Demo: login - <strong>admin</strong>, parol - <strong>admin</strong>
+            </p>
+            <a href="../index.html" class="back-link">
+                <i class="fas fa-arrow-left"></i> Bosh sahifaga qaytish
+            </a>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('login-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            
+            // Simple authentication (in production, use proper backend authentication)
+            if (username === 'admin' && password === 'admin') {
+                localStorage.setItem('adminLoggedIn', 'true');
+                window.location.href = 'dashboard.html';
+            } else {
+                alert('Login yoki parol noto\'g\'ri!');
+            }
+        });
+    </script>
+</body>
+</html>

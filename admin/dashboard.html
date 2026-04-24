@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - Boshqaruv paneli</title>
+    <link rel="stylesheet" href="../css/admin.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <i class="fas fa-plane-departure"></i>
+            <span>UzTourism Admin</span>
+        </div>
+        <nav class="sidebar-nav">
+            <a href="dashboard.html" class="active">
+                <i class="fas fa-map-marked-alt"></i>
+                <span>Turistik joylar</span>
+            </a>
+            <a href="../index.html" target="_blank">
+                <i class="fas fa-eye"></i>
+                <span>Saytni ko'rish</span>
+            </a>
+        </nav>
+        <div class="sidebar-footer">
+            <button id="logout-btn">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>Chiqish</span>
+            </button>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Top Bar -->
+        <header class="top-bar">
+            <h1>Turistik joylar boshqaruvi</h1>
+            <div class="user-info">
+                <i class="fas fa-user-circle"></i>
+                <span>Admin</span>
+            </div>
+        </header>
+
+        <!-- Content -->
+        <div class="content-wrapper">
+            <!-- Action Bar -->
+            <div class="action-bar">
+                <button class="btn-primary" id="add-place-btn">
+                    <i class="fas fa-plus"></i> Turistik joy qo'shish
+                </button>
+            </div>
+
+            <!-- Places Table -->
+            <div class="table-container">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Rasm</th>
+                            <th>Nomi</th>
+                            <th>Joylashuv</th>
+                            <th>Kategoriya</th>
+                            <th>Amallar</th>
+                        </tr>
+                    </thead>
+                    <tbody id="places-table-body">
+                        <!-- Places will be loaded here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <!-- Add/Edit Place Modal -->
+    <div class="modal" id="place-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modal-title">Turistik joy qo'shish</h2>
+                <button class="close-btn" id="close-modal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="place-form">
+                <input type="hidden" id="place-id">
+                <div class="form-group">
+                    <label>Joy nomi</label>
+                    <input type="text" id="place-name" placeholder="Masalan: Registon maydoni" required>
+                </div>
+                <div class="form-group">
+                    <label>Joylashuv (viloyat/shahar)</label>
+                    <input type="text" id="place-location" placeholder="Masalan: Samarqand" required>
+                </div>
+                <div class="form-group">
+                    <label>Rasm URL</label>
+                    <input type="url" id="place-image" placeholder="https://example.com/image.jpg" required>
+                    <small>Rasm URL manzilini kiriting</small>
+                </div>
+                <div class="form-group">
+                    <label>Kategoriya</label>
+                    <select id="place-category" required>
+                        <option value="">Kategoriya tanlang</option>
+                        <option value="Arxitektura">Arxitektura</option>
+                        <option value="Tarixiy obida">Tarixiy obida</option>
+                        <option value="Tarixiy shahar">Tarixiy shahar</option>
+                        <option value="Qadimiy shahar">Qadimiy shahar</option>
+                        <option value="Tabiat">Tabiat</option>
+                        <option value="Majmua">Majmua</option>
+                        <option value="Boshqa">Boshqa</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Tavsif (to'liq ma'lumot)</label>
+                    <textarea id="place-description" rows="4" placeholder="Joy haqida to'liq ma'lumot..." required></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Diqqatga sazovor jihozlar (har birini yangi qatordan yozing)</label>
+                    <textarea id="place-highlights" rows="3" placeholder="Masalan:
+XV asr me'morligi
+Uch madrasa majmuasi
+Kunduz va tun ko'rinishi" required></textarea>
+                    <small>Har bir jihozni yangi qatordan kiriting</small>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn-secondary" id="cancel-btn">Bekor qilish</button>
+                    <button type="submit" class="btn-primary">Saqlash</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div class="modal" id="delete-modal">
+        <div class="modal-content modal-small">
+            <div class="modal-header">
+                <h2>O'chirishni tasdiqlash</h2>
+                <button class="close-btn" id="close-delete-modal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Haqiqatan ham bu turistik joyni o'chirmoqchimisiz?</p>
+            </div>
+            <div class="form-actions">
+                <button type="button" class="btn-secondary" id="cancel-delete">Bekor qilish</button>
+                <button type="button" class="btn-danger" id="confirm-delete">O'chirish</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Check if admin is logged in
+        if (!localStorage.getItem('adminLoggedIn')) {
+            window.location.href = 'login.html';
+        }
+
+        // DOM Elements
+        const logoutBtn = document.getElementById('logout-btn');
+        const addPlaceBtn = document.getElementById('add-place-btn');
+        const placeModal = document.getElementById('place-modal');
+        const deleteModal = document.getElementById('delete-modal');
+        const closeModalBtn = document.getElementById('close-modal');
+        const closeDeleteModalBtn = document.getElementById('close-delete-modal');
+        const cancelBtn = document.getElementById('cancel-btn');
+        const cancelDeleteBtn = document.getElementById('cancel-delete');
+        const confirmDeleteBtn = document.getElementById('confirm-delete');
+        const placeForm = document.getElementById('place-form');
+        const placesTableBody = document.getElementById('places-table-body');
+        const modalTitle = document.getElementById('modal-title');
+
+        let deleteId = null;
+
+        // Logout
+        logoutBtn.addEventListener('click', () => {
+            localStorage.removeItem('adminLoggedIn');
+            window.location.href = 'login.html';
+        });
+
+        // Load places
+        function loadPlaces() {
+            const places = JSON.parse(localStorage.getItem('places')) || [];
+            
+            if (places.length === 0) {
+                placesTableBody.innerHTML = `
+                    <tr>
+                        <td colspan="5" class="empty-message">Hozircha turistik joylar yo'q</td>
+                    </tr>
+                `;
+                return;
+            }
+
+            placesTableBody.innerHTML = places.map(item => `
+                <tr>
+                    <td><img src="${item.image}" alt="${item.name}" class="table-image" onerror="this.src='https://via.placeholder.com/80?text=No+Image'"></td>
+                    <td>${item.name}</td>
+                    <td>${item.location}</td>
+                    <td><span class="category-badge">${item.category}</span></td>
+                    <td>
+                        <div class="action-buttons">
+                            <button class="btn-edit" onclick="editPlace(${item.id})">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="btn-delete" onclick="confirmDelete(${item.id})">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // Open modal for adding place
+        addPlaceBtn.addEventListener('click', () => {
+            modalTitle.textContent = "Turistik joy qo'shish";
+            placeForm.reset();
+            document.getElementById('place-id').value = '';
+            placeModal.style.display = 'flex';
+        });
+
+        // Close modals
+        closeModalBtn.addEventListener('click', () => {
+            placeModal.style.display = 'none';
+        });
+
+        closeDeleteModalBtn.addEventListener('click', () => {
+            deleteModal.style.display = 'none';
+        });
+
+        cancelBtn.addEventListener('click', () => {
+            placeModal.style.display = 'none';
+        });
+
+        cancelDeleteBtn.addEventListener('click', () => {
+            deleteModal.style.display = 'none';
+        });
+
+        // Close modal when clicking outside
+        window.addEventListener('click', (e) => {
+            if (e.target === placeModal) {
+                placeModal.style.display = 'none';
+            }
+            if (e.target === deleteModal) {
+                deleteModal.style.display = 'none';
+            }
+        });
+
+        // Edit place
+        function editPlace(id) {
+            const places = JSON.parse(localStorage.getItem('places')) || [];
+            const item = places.find(p => p.id === id);
+            
+            if (item) {
+                modalTitle.textContent = "Turistik joyni tahrirlash";
+                document.getElementById('place-id').value = item.id;
+                document.getElementById('place-name').value = item.name;
+                document.getElementById('place-location').value = item.location;
+                document.getElementById('place-image').value = item.image;
+                document.getElementById('place-category').value = item.category;
+                document.getElementById('place-description').value = item.description;
+                document.getElementById('place-highlights').value = item.highlights ? item.highlights.join('\n') : '';
+                placeModal.style.display = 'flex';
+            }
+        }
+
+        // Confirm delete
+        function confirmDelete(id) {
+            deleteId = id;
+            deleteModal.style.display = 'flex';
+        }
+
+        // Delete place
+        confirmDeleteBtn.addEventListener('click', () => {
+            if (deleteId) {
+                let places = JSON.parse(localStorage.getItem('places')) || [];
+                places = places.filter(p => p.id !== deleteId);
+                localStorage.setItem('places', JSON.stringify(places));
+                loadPlaces();
+                deleteModal.style.display = 'none';
+                deleteId = null;
+            }
+        });
+
+        // Save place (Create or Update)
+        placeForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const id = document.getElementById('place-id').value;
+            const name = document.getElementById('place-name').value;
+            const location = document.getElementById('place-location').value;
+            const image = document.getElementById('place-image').value;
+            const category = document.getElementById('place-category').value;
+            const description = document.getElementById('place-description').value;
+            const highlightsText = document.getElementById('place-highlights').value;
+            const highlights = highlightsText.split('\n').filter(h => h.trim() !== '');
+            
+            let places = JSON.parse(localStorage.getItem('places')) || [];
+            
+            if (id) {
+                // Update existing place
+                const index = places.findIndex(p => p.id === parseInt(id));
+                if (index !== -1) {
+                    places[index] = { id: parseInt(id), name, location, image, category, description, highlights };
+                }
+            } else {
+                // Create new place
+                const newId = places.length > 0 ? Math.max(...places.map(p => p.id)) + 1 : 1;
+                places.push({ id: newId, name, location, image, category, description, highlights });
+            }
+            
+            localStorage.setItem('places', JSON.stringify(places));
+            loadPlaces();
+            placeModal.style.display = 'none';
+        });
+
+        // Initialize
+        loadPlaces();
+    </script>
+</body>
+</html>
