@@ -1,0 +1,43 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "main.go",
+      "use": "@vercel/go"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/css/(.*)",
+      "dest": "/css/$1"
+    },
+    {
+      "src": "/js/(.*)",
+      "dest": "/js/$1"
+    },
+    {
+      "src": "/admin/(.*)",
+      "dest": "main.go"
+    },
+    {
+      "src": "/api/(.*)",
+      "dest": "main.go"
+    },
+    {
+      "src": "/auth/(.*)",
+      "dest": "main.go"
+    },
+    {
+      "src": "/robots.txt",
+      "dest": "main.go"
+    },
+    {
+      "src": "/sitemap.xml",
+      "dest": "main.go"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "main.go"
+    }
+  ]
+}

@@ -1,3 +1,4 @@
 .env
 server
 turizm.db
+turizm.db-journal
