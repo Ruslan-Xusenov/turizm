@@ -10,6 +10,80 @@ const modal = document.getElementById('place-modal');
 const closeModal = document.querySelector('.close-modal');
 const modalBody = document.getElementById('modal-body');
 
+// ============================================
+// Scroll Reveal Animation
+// ============================================
+function revealOnScroll() {
+    const reveals = document.querySelectorAll('.reveal');
+    const windowHeight = window.innerHeight;
+    
+    reveals.forEach(el => {
+        const elementTop = el.getBoundingClientRect().top;
+        const revealPoint = 120;
+        
+        if (elementTop < windowHeight - revealPoint) {
+            el.classList.add('active');
+        }
+    });
+}
+
+window.addEventListener('scroll', revealOnScroll);
+window.addEventListener('load', revealOnScroll);
+
+// ============================================
+// Counter Animation
+// ============================================
+let countersAnimated = false;
+
+function animateCounters() {
+    if (countersAnimated) return;
+    
+    const statsSection = document.querySelector('.stats');
+    if (!statsSection) return;
+    
+    const sectionTop = statsSection.getBoundingClientRect().top;
+    const windowHeight = window.innerHeight;
+    
+    if (sectionTop < windowHeight - 100) {
+        countersAnimated = true;
+        const counters = statsSection.querySelectorAll('h3');
+        
+        counters.forEach(counter => {
+            const target = counter.innerText;
+            const num = parseInt(target.replace(/[^0-9]/g, ''));
+            const suffix = target.replace(/[0-9,]/g, '');
+            let current = 0;
+            const increment = Math.ceil(num / 60);
+            const duration = 2000;
+            const stepTime = duration / (num / increment);
+            
+            const timer = setInterval(() => {
+                current += increment;
+                if (current >= num) {
+                    current = num;
+                    clearInterval(timer);
+                }
+                counter.innerText = current.toLocaleString() + suffix;
+            }, stepTime);
+        });
+    }
+}
+
+window.addEventListener('scroll', animateCounters);
+window.addEventListener('load', animateCounters);
+
+// ============================================
+// Parallax Effect on Hero
+// ============================================
+window.addEventListener('scroll', () => {
+    const scrolled = window.scrollY;
+    const heroContent = document.querySelector('.hero-content');
+    if (heroContent && scrolled < window.innerHeight) {
+        heroContent.style.transform = `translateY(${scrolled * 0.3}px)`;
+        heroContent.style.opacity = 1 - (scrolled / (window.innerHeight * 0.8));
+    }
+});
+
 // Load Site Content
 async function loadSiteContent() {
     try {
