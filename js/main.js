@@ -244,7 +244,10 @@ async function openPlaceDetails(id) {
             <div style="color: #666; margin-bottom: 15px;"><i class="fas fa-map-marker-alt"></i> ${place.location} &bull; ${place.category}</div>
             ${imagesHtml}
             <p style="font-size: 1.1rem; line-height: 1.6; margin-bottom: 20px;">${place.description}</p>
-            <div class="modal-price">Sayohat narxi: ${place.price.toLocaleString()} so'm</div>
+            <div class="modal-price" style="margin-bottom: 20px;">Sayohat narxi: ${place.price.toLocaleString()} so'm</div>
+            <div style="text-align: center;">
+                <a href="https://t.me/+998913328290" target="_blank" class="btn-primary" style="display:inline-block; padding:10px 20px; border-radius:5px; background: #0088cc; color:#fff; text-decoration:none;"><i class="fab fa-telegram"></i> Onlayn bron qilish</a>
+            </div>
         `;
         
         modal.style.display = "block";
@@ -268,8 +271,9 @@ window.openDestinationModal = function(destId) {
             <img class="carousel-slide active" src="${img}" alt="${name}">
         </div>
         <p style="font-size: 1.1rem; line-height: 1.6; margin-bottom: 20px;">${desc}</p>
-        <div style="margin-top: 20px; text-align:center;">
+        <div style="margin-top: 20px; text-align:center; display:flex; gap:10px; justify-content:center; flex-wrap:wrap;">
             <a href="#places" onclick="closeModal.onclick()" class="btn-primary" style="display:inline-block; padding:10px 20px; border-radius:5px; color:#fff; text-decoration:none;">Sayohat paketlarini ko'rish</a>
+            <a href="https://t.me/+998913328290" target="_blank" class="btn-primary" style="display:inline-block; padding:10px 20px; border-radius:5px; background: #0088cc; color:#fff; text-decoration:none;"><i class="fab fa-telegram"></i> Onlayn bron qilish</a>
         </div>
     `;
     
