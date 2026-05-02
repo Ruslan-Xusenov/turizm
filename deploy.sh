@@ -41,5 +41,5 @@ ssh $SERVER_USER@$SERVER_IP "systemctl is-active turizm && echo '  -> Dastur ISH
 echo ""
 echo "============================================="
 echo "  DEPLOY MUVAFFAQIYATLI YAKUNLANDI!"
-echo "  Sayt: http://$SERVER_IP"
+echo "  Sayt: https://imanturizm.uz"
 echo "============================================="

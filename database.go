@@ -93,7 +93,7 @@ func seedData() {
 			"about_text": "Biz O'zbekistonning eng go'zal joylarini butun dunyo bo'ylab odamlarga tanishtirishda 15 yildan ortiq tajribaga egamiz. Professional gidlarimiz, qulay transport xizmatlarimiz va maxsus tur paketlarimiz bilan sizga unutilmas sayohat tajribasini taqdim etamiz.",
 			"contact_address": "Toshkent shahri, Chilonzor tumani",
 			"contact_phone": "+998 90 123 45 67",
-			"contact_email": "info@uztourism.uz",
+			"contact_email": "info@imanturizm.uz",
 			"destinations_title": "Mashhur Yo'nalishlar",
 			"destinations_subtitle": "O'zbekistonning eng mashhur turistik shaharlarini kashf eting",
 			"dest1_name": "Samarqand",

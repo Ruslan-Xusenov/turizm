@@ -64,7 +64,7 @@ SESSION_SECRET=your_very_secret_session_key_change_this
 # === GOOGLE OAUTH (ixtiyoriy) ===
 GOOGLE_KEY=
 GOOGLE_SECRET=
-CALLBACK_URL=http://46.224.133.140/auth/google/callback
+CALLBACK_URL=https://imanturizm.uz/auth/google/callback
 
 # === JWT SIRLI KALIT ===
 JWT_SECRET=your_jwt_secret_key_change_this
@@ -150,7 +150,7 @@ if systemctl is-active --quiet "$SERVICE_NAME"; then
     echo "============================================="
     echo "  O'RNATISH MUVAFFAQIYATLI YAKUNLANDI! ✓"
     echo ""
-    echo "  Sayt:    http://46.224.133.140:$APP_PORT"
+    echo "  Sayt:    https://imanturizm.uz"
     echo "  Log:     journalctl -u $SERVICE_NAME -f"
     echo "  To'xtat: systemctl stop $SERVICE_NAME"
     echo "  Yangilash: bash $APP_DIR/update.sh"

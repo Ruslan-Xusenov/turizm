@@ -89,12 +89,12 @@ func generateSitemap(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte(`<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
-        <loc>https://uztourism.uz/</loc>
+        <loc>https://imanturizm.uz/</loc>
         <changefreq>daily</changefreq>
         <priority>1.0</priority>
     </url>
     <url>
-        <loc>https://uztourism.uz/admin/login</loc>
+        <loc>https://imanturizm.uz/admin/login</loc>
         <changefreq>monthly</changefreq>
         <priority>0.5</priority>
     </url>
@@ -458,7 +458,7 @@ func replyMessageAdmin(w http.ResponseWriter, r *http.Request) {
 	if smtpUser != "" && smtpPass != "" {
 		auth := smtp.PlainAuth("", smtpUser, smtpPass, smtpHost)
 		msg := []byte("To: " + email + "\r\n" +
-			"Subject: UzTourism - Xabaringizga javob\r\n" +
+			"Subject: ImanTurizm - Xabaringizga javob\r\n" +
 			"\r\n" +
 			req.ReplyText + "\r\n")
 		err := smtp.SendMail(smtpHost+":"+smtpPort, auth, smtpUser, []string{email}, msg)

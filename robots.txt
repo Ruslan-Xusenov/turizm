@@ -3,4 +3,4 @@ Disallow: /admin/
 Disallow: /api/
 Allow: /
 
-Sitemap: https://uztourism.uz/sitemap.xml
+Sitemap: https://imanturizm.uz/sitemap.xml
