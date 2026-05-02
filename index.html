@@ -25,9 +25,19 @@
     <meta name="twitter:description" content="Eng hamyonbop va qiziqarli sayohat paketlari bizda.">
     <meta name="twitter:image" content="https://images.unsplash.com/photo-1564507592333-c60657eea523?w=1200">
 
+    <!-- Preconnect to external domains -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+    <link rel="preconnect" href="https://images.unsplash.com">
+
+    <!-- Preload LCP Image -->
+    <link rel="preload" as="image" href="https://images.unsplash.com/photo-1564507592333-c60657eea523?w=1920" fetchpriority="high">
+
     <link rel="stylesheet" href="css/style.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" media="print" onload="this.media='all'">
+    <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"></noscript>
 
     <!-- JSON-LD Structured Data -->
     <script type="application/ld+json">
@@ -70,11 +80,11 @@
                     <a href="https://t.me/+gJw5odFwX_04ZjZi" target="_blank" class="btn-secondary" style="padding: 8px 15px; margin-left: 10px; background: #0088cc; color: white; border: none; border-radius: 5px;"><i class="fab fa-telegram"></i> Bron qilish</a>
                 </li>
             </ul>
-            <div class="hamburger">
+            <button class="hamburger" aria-label="Menu" aria-expanded="false" aria-controls="nav-links">
                 <span></span>
                 <span></span>
                 <span></span>
-            </div>
+            </button>
         </nav>
     </header>
 
@@ -138,7 +148,7 @@
             </div>
             <div class="about-content">
                 <div class="about-image">
-                    <img src="https://images.unsplash.com/photo-1589308078059-be1415eab4c3?w=800" alt="O'zbekiston">
+                    <img src="https://images.unsplash.com/photo-1589308078059-be1415eab4c3?w=800" alt="O'zbekistonning go'zal manzarasi" loading="lazy" width="800" height="600">
                 </div>
                 <div class="about-text">
                     <h3>Nega aynan biz?</h3>
@@ -164,7 +174,7 @@
             <div class="destinations-grid">
                 <div class="destination-card">
                     <div class="card-image">
-                        <img id="dest1-img" src="https://images.unsplash.com/photo-1564507592333-c60657eea523?w=600" alt="Samarqand">
+                        <img id="dest1-img" src="https://images.unsplash.com/photo-1564507592333-c60657eea523?w=600" alt="Samarqand tarixiy obidalari" loading="lazy" width="600" height="400">
                         <div class="card-badge">Eng mashhur</div>
                     </div>
                     <div class="card-content">
@@ -176,7 +186,7 @@
                 </div>
                 <div class="destination-card">
                     <div class="card-image">
-                        <img id="dest2-img" src="https://images.unsplash.com/photo-1548013146-72479768bada?w=600" alt="Buxoro">
+                        <img id="dest2-img" src="https://images.unsplash.com/photo-1548013146-72479768bada?w=600" alt="Buxoro minorasi" loading="lazy" width="600" height="400">
                     </div>
                     <div class="card-content">
                         <h3 id="dest2-name">Buxoro</h3>
@@ -187,7 +197,7 @@
                 </div>
                 <div class="destination-card">
                     <div class="card-image">
-                        <img id="dest3-img" src="https://images.unsplash.com/photo-1599576935803-91efed66198f?w=600" alt="Xiva">
+                        <img id="dest3-img" src="https://images.unsplash.com/photo-1599576935803-91efed66198f?w=600" alt="Xiva Ichan-Qal'a" loading="lazy" width="600" height="400">
                     </div>
                     <div class="card-content">
                         <h3 id="dest3-name">Xiva</h3>
@@ -198,7 +208,7 @@
                 </div>
                 <div class="destination-card">
                     <div class="card-image">
-                        <img id="dest4-img" src="https://images.unsplash.com/photo-1605548230624-8d2d639e7022?w=600" alt="Toshkent">
+                        <img id="dest4-img" src="https://images.unsplash.com/photo-1605548230624-8d2d639e7022?w=600" alt="Toshkent shahri markazi" loading="lazy" width="600" height="400">
                     </div>
                     <div class="card-content">
                         <h3 id="dest4-name">Toshkent</h3>
@@ -257,13 +267,13 @@
                 </div>
                 <form class="contact-form" id="contact-form">
                     <div class="form-group">
-                        <input type="text" id="name" placeholder="Ismingiz" required>
+                        <input type="text" id="name" placeholder="Ismingiz" aria-label="Ismingiz" required>
                     </div>
                     <div class="form-group">
-                        <input type="email" id="email" placeholder="Email manzilingiz" required>
+                        <input type="email" id="email" placeholder="Email manzilingiz" aria-label="Email manzilingiz" required>
                     </div>
                     <div class="form-group">
-                        <textarea id="message" placeholder="Xabaringiz" rows="5" required></textarea>
+                        <textarea id="message" placeholder="Xabaringiz" aria-label="Xabaringiz" rows="5" required></textarea>
                     </div>
                     <button type="submit" class="btn-primary">Yuborish</button>
                 </form>
@@ -294,10 +304,10 @@
                 <div class="footer-social">
                     <h4>Ijtimoiy tarmoqlar</h4>
                     <div class="social-icons">
-                        <a href="#"><i class="fab fa-facebook"></i></a>
-                        <a href="#"><i class="fab fa-instagram"></i></a>
-                        <a href="#"><i class="fab fa-telegram"></i></a>
-                        <a href="#"><i class="fab fa-youtube"></i></a>
+                        <a href="#" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
+                        <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                        <a href="#" aria-label="Telegram"><i class="fab fa-telegram"></i></a>
+                        <a href="#" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
                     </div>
                 </div>
             </div>

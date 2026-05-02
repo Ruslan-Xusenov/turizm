@@ -37,8 +37,8 @@
 }
 
 html { scroll-behavior: smooth; }
-body { font-family: 'Poppins', sans-serif; line-height: 1.7; color: var(--text-dark); background: var(--bg-white); overflow-x: hidden; }
-.container { max-width: 1280px; margin: 0 auto; padding: 0 24px; }
+body { font-family: 'Poppins', sans-serif; line-height: 1.7; color: var(--text-dark); background: var(--bg-white); overflow-x: hidden; font-display: swap; }
+.container { max-width: 1280px; margin: 0 auto; padding: 0 24px; content-visibility: auto; }
 ::-webkit-scrollbar { width: 8px; }
 ::-webkit-scrollbar-track { background: var(--bg-soft); }
 ::-webkit-scrollbar-thumb { background: var(--primary-light); border-radius: 4px; }

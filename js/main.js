@@ -11,78 +11,68 @@ const closeModal = document.querySelector('.close-modal');
 const modalBody = document.getElementById('modal-body');
 
 // ============================================
-// Scroll Reveal Animation
+// Intersection Observer for Animations
 // ============================================
-function revealOnScroll() {
-    const reveals = document.querySelectorAll('.reveal');
-    const windowHeight = window.innerHeight;
-    
-    reveals.forEach(el => {
-        const elementTop = el.getBoundingClientRect().top;
-        const revealPoint = 120;
-        
-        if (elementTop < windowHeight - revealPoint) {
-            el.classList.add('active');
+const revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            entry.target.classList.add('active');
+            revealObserver.unobserve(entry.target);
         }
     });
+}, { threshold: 0.15 });
+
+document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+// ============================================
+// Counter Animation with Intersection Observer
+// ============================================
+const statsSection = document.querySelector('.stats');
+if (statsSection) {
+    const statsObserver = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting) {
+            const counters = statsSection.querySelectorAll('h3');
+            counters.forEach(counter => {
+                const target = counter.innerText;
+                const num = parseInt(target.replace(/[^0-9]/g, ''));
+                const suffix = target.replace(/[0-9,]/g, '');
+                let current = 0;
+                const duration = 2000;
+                const increment = Math.ceil(num / (duration / 30));
+                
+                const timer = setInterval(() => {
+                    current += increment;
+                    if (current >= num) {
+                        current = num;
+                        clearInterval(timer);
+                    }
+                    counter.innerText = current.toLocaleString() + suffix;
+                }, 30);
+            });
+            statsObserver.unobserve(statsSection);
+        }
+    }, { threshold: 0.2 });
+    statsObserver.observe(statsSection);
 }
 
-window.addEventListener('scroll', revealOnScroll);
-window.addEventListener('load', revealOnScroll);
-
 // ============================================
-// Counter Animation
+// Parallax Effect on Hero (Optimized)
 // ============================================
-let countersAnimated = false;
-
-function animateCounters() {
-    if (countersAnimated) return;
-    
-    const statsSection = document.querySelector('.stats');
-    if (!statsSection) return;
-    
-    const sectionTop = statsSection.getBoundingClientRect().top;
-    const windowHeight = window.innerHeight;
-    
-    if (sectionTop < windowHeight - 100) {
-        countersAnimated = true;
-        const counters = statsSection.querySelectorAll('h3');
-        
-        counters.forEach(counter => {
-            const target = counter.innerText;
-            const num = parseInt(target.replace(/[^0-9]/g, ''));
-            const suffix = target.replace(/[0-9,]/g, '');
-            let current = 0;
-            const increment = Math.ceil(num / 60);
-            const duration = 2000;
-            const stepTime = duration / (num / increment);
-            
-            const timer = setInterval(() => {
-                current += increment;
-                if (current >= num) {
-                    current = num;
-                    clearInterval(timer);
-                }
-                counter.innerText = current.toLocaleString() + suffix;
-            }, stepTime);
-        });
-    }
-}
-
-window.addEventListener('scroll', animateCounters);
-window.addEventListener('load', animateCounters);
-
-// ============================================
-// Parallax Effect on Hero
-// ============================================
+let ticking = false;
 window.addEventListener('scroll', () => {
-    const scrolled = window.scrollY;
-    const heroContent = document.querySelector('.hero-content');
-    if (heroContent && scrolled < window.innerHeight) {
-        heroContent.style.transform = `translateY(${scrolled * 0.3}px)`;
-        heroContent.style.opacity = 1 - (scrolled / (window.innerHeight * 0.8));
+    if (!ticking) {
+        window.requestAnimationFrame(() => {
+            const scrolled = window.scrollY;
+            const heroContent = document.querySelector('.hero-content');
+            if (heroContent && scrolled < window.innerHeight) {
+                heroContent.style.transform = `translateY(${scrolled * 0.3}px)`;
+                heroContent.style.opacity = 1 - (scrolled / (window.innerHeight * 0.8));
+            }
+            ticking = false;
+        });
+        ticking = true;
     }
-});
+}, { passive: true });
 
 // Load Site Content
 async function loadSiteContent() {
@@ -145,7 +135,7 @@ async function checkAuth() {
             }
         }
     } catch (err) {
-        console.error("Auth check failed:", err);
+        // Silent error for auth
     }
 }
 checkAuth();
@@ -157,27 +147,33 @@ window.addEventListener('scroll', () => {
     } else {
         header.classList.remove('scrolled');
     }
-});
+}, { passive: true });
 
 // Mobile menu toggle
 hamburger.addEventListener('click', () => {
+    const expanded = hamburger.getAttribute('aria-expanded') === 'true';
+    hamburger.setAttribute('aria-expanded', !expanded);
     navLinks.classList.toggle('active');
+    hamburger.classList.toggle('active');
 });
 
 navLinksItems.forEach(link => {
     link.addEventListener('click', () => {
         navLinks.classList.remove('active');
+        hamburger.classList.remove('active');
+        hamburger.setAttribute('aria-expanded', 'false');
     });
 });
 
 // Hero slider
 let currentSlide = 0;
 function nextSlide() {
+    if (slides.length === 0) return;
     slides[currentSlide].classList.remove('active');
     currentSlide = (currentSlide + 1) % slides.length;
     slides[currentSlide].classList.add('active');
 }
-setInterval(nextSlide, 5000);
+if (slides.length > 0) setInterval(nextSlide, 5000);
 
 // Load places from API
 async function loadPlaces() {
@@ -203,7 +199,7 @@ function displayPlaces(places) {
     placesContainer.innerHTML = places.map(item => `
         <div class="place-card" style="cursor: pointer;" onclick="openPlaceDetails(${item.id})">
             <div class="place-image">
-                <img src="${item.images && item.images.length > 0 ? item.images[0] : 'https://via.placeholder.com/600x400?text=Joy'}" alt="${item.name}">
+                <img src="${item.images && item.images.length > 0 ? item.images[0] : 'https://via.placeholder.com/600x400?text=Joy'}" alt="${item.name}" loading="lazy" width="600" height="400">
                 <span class="place-badge">${item.category}</span>
             </div>
             <div class="place-content">
@@ -213,7 +209,7 @@ function displayPlaces(places) {
                 </div>
                 <h3>${item.name}</h3>
                 <p class="description">${item.description.substring(0, 100)}...</p>
-                <div style="margin-top: 10px; font-weight: bold; color: var(--primary-color);">Batafsil ma'lumot va narxlar <i class="fas fa-arrow-right"></i></div>
+                <div style="margin-top: 10px; font-weight: bold; color: var(--primary);">Batafsil ma'lumot va narxlar <i class="fas fa-arrow-right"></i></div>
             </div>
         </div>
     `).join('');
@@ -230,10 +226,10 @@ async function openPlaceDetails(id) {
         if (place.images && place.images.length > 0) {
             imagesHtml = `
                 <div class="carousel-container">
-                    ${place.images.map((img, idx) => `<img class="carousel-slide ${idx===0?'active':''}" src="${img}" alt="${place.name}">`).join('')}
+                    ${place.images.map((img, idx) => `<img class="carousel-slide ${idx===0?'active':''}" src="${img}" alt="${place.name}" loading="lazy">`).join('')}
                     ${place.images.length > 1 ? `
-                        <a class="carousel-prev" onclick="moveSlide(-1)">&#10094;</a>
-                        <a class="carousel-next" onclick="moveSlide(1)">&#10095;</a>
+                        <a class="carousel-prev" onclick="moveSlide(-1)" aria-label="Oldingi rasm">&#10094;</a>
+                        <a class="carousel-next" onclick="moveSlide(1)" aria-label="Keyingi rasm">&#10095;</a>
                     ` : ''}
                 </div>
             `;
@@ -268,11 +264,11 @@ window.openDestinationModal = function(destId) {
         <h2 style="margin-bottom: 10px;">${name}</h2>
         <div style="color: #666; margin-bottom: 15px;"><i class="fas fa-map-marker-alt"></i> O'zbekiston &bull; Mashhur Yo'nalish</div>
         <div class="carousel-container">
-            <img class="carousel-slide active" src="${img}" alt="${name}">
+            <img class="carousel-slide active" src="${img}" alt="${name}" loading="lazy">
         </div>
         <p style="font-size: 1.1rem; line-height: 1.6; margin-bottom: 20px;">${desc}</p>
         <div style="margin-top: 20px; text-align:center; display:flex; gap:10px; justify-content:center; flex-wrap:wrap;">
-            <a href="#places" onclick="closeModal.onclick()" class="btn-primary" style="display:inline-block; padding:10px 20px; border-radius:5px; color:#fff; text-decoration:none;">Sayohat paketlarini ko'rish</a>
+            <a href="#places" onclick="modal.style.display = 'none'" class="btn-primary" style="display:inline-block; padding:10px 20px; border-radius:5px; color:#fff; text-decoration:none;">Sayohat paketlarini ko'rish</a>
             <a href="https://t.me/+998913328290" target="_blank" class="btn-primary" style="display:inline-block; padding:10px 20px; border-radius:5px; background: #0088cc; color:#fff; text-decoration:none;"><i class="fab fa-telegram"></i> Onlayn bron qilish</a>
         </div>
     `;

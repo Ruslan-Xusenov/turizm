@@ -48,6 +48,7 @@ func init() {
 	router = chi.NewRouter()
 	router.Use(middleware.Logger)
 	router.Use(middleware.Recoverer)
+	router.Use(middleware.Compress(5))
 
 	fs := http.FileServer(http.Dir("."))
 	router.Handle("/css/*", fs)
