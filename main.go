@@ -60,6 +60,9 @@ func init() {
 	router.Get("/robots.txt", func(w http.ResponseWriter, r *http.Request) {
 		http.ServeFile(w, r, "robots.txt")
 	})
+	router.Get("/google94bc4a68fc393c2a.html", func(w http.ResponseWriter, r *http.Request) {
+		http.ServeFile(w, r, "google94bc4a68fc393c2a.html")
+	})
 	router.Get("/sitemap.xml", generateSitemap)
 
 	router.Get("/admin", func(w http.ResponseWriter, r *http.Request) {
