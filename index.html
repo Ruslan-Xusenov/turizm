@@ -31,13 +31,35 @@
     <link rel="preconnect" href="https://cdnjs.cloudflare.com">
     <link rel="preconnect" href="https://images.unsplash.com">
 
-    <!-- Preload LCP Image -->
-    <link rel="preload" as="image" href="https://images.unsplash.com/photo-1564507592333-c60657eea523?w=1920" fetchpriority="high">
+    <!-- Preload LCP Image with responsive size -->
+    <link rel="preload" as="image" href="https://images.unsplash.com/photo-1564507592333-c60657eea523?w=800" imagesrcset="https://images.unsplash.com/photo-1564507592333-c60657eea523?w=800 800w, https://images.unsplash.com/photo-1564507592333-c60657eea523?w=1200 1200w, https://images.unsplash.com/photo-1564507592333-c60657eea523?w=1920 1920w" imagesizes="100vw" fetchpriority="high">
 
-    <link rel="stylesheet" href="css/style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4f46e5; --primary-light: #818cf8; --primary-dark: #3730a3; --accent: #f59e0b;
+            --gradient-1: linear-gradient(135deg, #4f46e5 0%, #7c3aed 50%, #ec4899 100%);
+            --gradient-hero: linear-gradient(135deg, rgba(79, 70, 229, 0.7) 0%, rgba(124, 58, 237, 0.5) 50%, rgba(236, 72, 153, 0.4) 100%);
+            --text-dark: #0f172a; --bg-white: #ffffff; --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        *,*::before,*::after { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Poppins', sans-serif; line-height: 1.7; color: var(--text-dark); background: var(--bg-white); overflow-x: hidden; }
+        .header { position: fixed; top: 0; left: 0; width: 100%; z-index: 1000; background: transparent; transition: var(--transition); }
+        .navbar { display: flex; justify-content: space-between; align-items: center; padding: 18px 5%; max-width: 1400px; margin: 0 auto; }
+        .hero { position: relative; height: 100vh; min-height: 700px; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+        .hero-slider { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; }
+        .slide { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-size: cover; background-position: center; opacity: 0; transition: opacity 1.5s ease; }
+        .slide.active { opacity: 1; }
+        .slide::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: var(--gradient-hero); }
+        .hero-content { text-align: center; color: var(--bg-white); z-index: 1; padding: 0 24px; max-width: 800px; }
+        .hero-content h1 { font-size: 4rem; font-weight: 800; margin-bottom: 24px; line-height: 1.1; }
+    </style>
+    <link rel="stylesheet" href="css/style.css" media="print" onload="this.media='all'">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" media="print" onload="this.media='all'">
-    <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"></noscript>
+    <noscript>
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    </noscript>
 
     <!-- JSON-LD Structured Data -->
     <script type="application/ld+json">
@@ -104,7 +126,7 @@
             </div>
         </div>
         <div class="hero-slider">
-            <div id="hero-img1" class="slide active" style="background-image: url('https://images.unsplash.com/photo-1564507592333-c60657eea523?w=1920')"></div>
+            <div id="hero-img1" class="slide active" style="background-image: url('https://images.unsplash.com/photo-1564507592333-c60657eea523?w=1200')"></div>
             <div id="hero-img2" class="slide" style="background-image: url('https://images.unsplash.com/photo-1548013146-72479768bada?w=1920')"></div>
             <div id="hero-img3" class="slide" style="background-image: url('https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=1920')"></div>
         </div>

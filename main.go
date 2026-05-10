@@ -50,9 +50,18 @@ func init() {
 	router.Use(middleware.Recoverer)
 	router.Use(middleware.Compress(5))
 
-	fs := http.FileServer(http.Dir("."))
-	router.Handle("/css/*", fs)
-	router.Handle("/js/*", fs)
+	// Cache control middleware for static files
+	router.Group(func(r chi.Router) {
+		r.Use(func(next http.Handler) http.Handler {
+			return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+				w.Header().Set("Cache-Control", "public, max-age=31536000")
+				next.ServeHTTP(w, r)
+			})
+		})
+		fs := http.FileServer(http.Dir("."))
+		r.Handle("/css/*", fs)
+		r.Handle("/js/*", fs)
+	})
 	
 	router.Get("/", func(w http.ResponseWriter, r *http.Request) {
 		http.ServeFile(w, r, "index.html")
